@@ -64,6 +64,12 @@
       });
     };
 
+    socket.on('reconnecting', function(){
+      $('#loading').text('reconnecting...').css('color', 'red').show();
+      $('#nickName').hide();
+      $('#chatForm').hide();
+    });
+
     socket.on('nick name duplicated', function(){
       $('#nickName input').css('border-color', 'red');
     });
