@@ -77,7 +77,11 @@
     });
 
     $('#chatForm form').submit(function(){
-      socket.emit('chat message', $('#m').val());
+      msg = $('#m').val();
+      if (msg === '')
+        return false;
+      socket.emit('chat message', msg);
+      $('#messages').append($('<li>').text(nickName + " say: " + msg));
       $('#m').val('');
       return false;
     });
