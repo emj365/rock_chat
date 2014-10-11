@@ -24,7 +24,7 @@
       #chatForm form { background: #000; padding: 3px; position: fixed; bottom: 0; width: 100%; }
       #chatForm form input { border: 0; padding: 10px; width: 90%; margin-right: .5%; }
       #chatForm form button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 10px; }
-      #chatForm.sending input { background-color: yellow; }
+      #messages .sending { color: yellow; }
       #messages { list-style-type: none; margin: 0; padding: 0; }
       #messages li { padding: 5px 10px; }
       #messages li:nth-child(odd) { background: #eee; }
@@ -79,16 +79,7 @@
     });
 
     socket.on('message sent', function(msgId){
-      $('#chatForm input').prop('disabled', false);
-      $('#chatForm button').text('send');
-      $('#chatForm').removeClass('sending');
-      $('#messages')
-        .append(
-          $('<li>')
-          .attr('id', msg.id)
-          .text(nickName + " say: " + msg.text)
-        );
-      $('#m').val('');
+      $('#' + msgId).removeClass('sending');
     });
 
     socket.on('chat message', function(msg){
@@ -105,16 +96,21 @@
     });
 
     $('#chatForm form').submit(function(){
-      msg = {
+      var msg = {
               id: guid(),
               text: $('#m').val()
             };
       if (msg.text === '')
         return false;
       socket.emit('chat message', msg);
-      $('#chatForm input').prop('disabled', true);
-      $('#chatForm button').text('sending...');
-      $('#chatForm').addClass('sending');
+      $('#messages')
+        .append(
+          $('<li>')
+            .addClass('sending')
+            .attr('id', msg.id)
+            .text(nickName + " say: " + msg.text)
+        );
+      $('#m').val('');
       return false;
     });
 
