@@ -7,10 +7,20 @@ var io      = require('socket.io')(http);
 var users = [];
 
 var randomNickName = function() {
-  name = "User" + Math.floor((Math.random() * 100) + 1);
-  if (checkNickName(name)) {
-    return name;
+  var nickName,
+      nickNameFix,
+      randomNumber = Math.floor((Math.random() * 100) + 1);
+
+  nickNameFix = randomNumber.toString();
+  while (nickNameFix.toString().length < 3) {
+    nickNameFix = '0' + nickNameFix.toString();
   }
+  nickName = "User" + nickNameFix;
+
+  if (checkNickName(nickName)) {
+    return nickName;
+  }
+
   return randomNickName();
 }
 
