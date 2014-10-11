@@ -66,7 +66,8 @@ io.on('connection', function(socket){
   });
 
   socket.on('chat message', function(msg){
-    socket.broadcast.emit('chat message', socket.nickName + ' say: ' + msg);
+    socket.emit('message sent', msg.id);
+    socket.broadcast.emit('chat message', socket.nickName + ' say: ' + msg.text);
   });
 });
 
