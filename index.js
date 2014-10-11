@@ -60,7 +60,7 @@ io.on('connection', function(socket){
       socket.emit('nick name changed');
       console.log('  change successed.');
     } else {
-      socket.emit('nick name duplicated', '');
+      socket.emit('nick name duplicated');
       console.log('  change failed.');
     }
   });
