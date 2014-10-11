@@ -22,17 +22,17 @@ var randomNickName = function() {
   }
 
   return randomNickName();
-}
+};
 
 var checkNickName = function(nickName) {
   for (var i = users.length - 1; i >= 0; i--) {
-    user = users[i];
+    var user = users[i];
     console.log('  check user nick name: ' + user.nickName);
     console.log('    same? ' + (user.nickName == nickName).toString());
     if (user.nickName == nickName) return false;
-  };
+  }
   return true;
-}
+};
 
 app.use("/js", express.static(__dirname + '/js'));
 app.get('/', function(req, res){
@@ -71,6 +71,6 @@ io.on('connection', function(socket){
   });
 });
 
-http.listen(3000, function(){
-  console.log('listening on *:3000');
+http.listen(process.env.PORT, function(){
+  console.log('listening on *:' + process.env.PORT);
 });
