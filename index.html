@@ -1,0 +1,97 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Socket.IO chat</title>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      body { font: 13px Helvetica, Arial; }
+
+      #loading {
+        font-size: 30px;
+        margin: 40px;
+        text-align: center;
+      }
+
+      #nickName {
+        font-size: 20px;
+        margin: 40px; text-align: center;
+      }
+      #nickName input, #nickName button {
+        padding: 10px;
+        font-size: 20px;
+      }
+
+      #chatForm form { background: #000; padding: 3px; position: fixed; bottom: 0; width: 100%; }
+      #chatForm form input { border: 0; padding: 10px; width: 90%; margin-right: .5%; }
+      #chatForm form button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 10px; }
+      #messages { list-style-type: none; margin: 0; padding: 0; }
+      #messages li { padding: 5px 10px; }
+      #messages li:nth-child(odd) { background: #eee; }
+    </style>
+  </head>
+  <body>
+  <div id="loading">
+    loading...
+  </div>
+  <form id="nickName" style="display:none;">
+      <label for="nickNameInput">Nick Name:</label>
+      <input id="nickNameInput" type="text" />
+      <button type="submit">GO</button>
+  </form>
+  <div id="chatForm" style="display:none;">
+    <ul id="messages"></ul>
+    <form action="">
+      <input id="m" autocomplete="off" /><button>Send</button>
+    </form>
+  </div>
+  <script src="js/socket.io-1.1.0.js"></script>
+  <script src="js/jquery-1.11.1.js"></script>
+  <script>
+    var socket = io();
+    var nickName = '';
+
+    var goChat = function() {
+      $('#nickName').hide();
+      $('#chatForm').show();
+      $('#chatForm form #m').focus();
+    }
+
+    socket.on('nick name duplicated', function(){
+      $('#nickName input').css('border-color', 'red');
+    });
+
+    socket.on('nick name changed', function(){
+      goChat();
+    });
+
+    socket.on('chat message', function(msg){
+      $('#messages').append($('<li>').text(msg));
+    });
+
+    socket.on('temp nick name', function(msg){
+      nickName = msg;
+      $('#nickName input').val(nickName);
+      $('#loading').hide();
+      $('#nickName').show();
+      $('#nickName input').focus().select();
+    });
+
+    $('#chatForm form').submit(function(){
+      socket.emit('chat message', $('#m').val());
+      $('#m').val('');
+      return false;
+    });
+
+    $('#nickName').submit(function() {
+      if (nickName != $('#nickName input').val()) {
+        nickName = $('#nickName input').val();
+        socket.emit('set nick name', nickName);
+      } else {
+        goChat();
+      }
+      return false;
+    });
+
+  </script>
+  </body>
+</html>
